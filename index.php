@@ -50,7 +50,7 @@ $members = $result->fetch_all(MYSQLI_ASSOC);
         
         <!-- Search & Add -->
         <section class="mb-4">
-            <div class="flex gap-2">
+            <div class="flex gap-2 items-center">
                 <div class="relative flex-1">
                     <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8"/>
@@ -74,6 +74,11 @@ $members = $result->fetch_all(MYSQLI_ASSOC);
                         <line x1="5" y1="12" x2="19" y2="12"/>
                     </svg>
                 </button>
+            </div>
+            <!-- Member count badge -->
+            <div class="mt-2 flex items-center justify-between">
+                <span id="memberCount" class="text-xs text-gray-500"></span>
+                <span id="searchResultText" class="text-xs text-gray-500 hidden"></span>
             </div>
         </section>
         
@@ -109,6 +114,15 @@ $members = $result->fetch_all(MYSQLI_ASSOC);
                     </div>
                 <?php endif; ?>
             </div>
+            <!-- No results message -->
+            <div id="noResults" class="hidden text-center py-8">
+                <svg class="w-12 h-12 mx-auto mb-3 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                    <line x1="8" y1="11" x2="14" y2="11"/>
+                </svg>
+                <p class="text-gray-500 text-sm">Tidak ada hasil untuk "<span id="searchQuery"></span>"</p>
+            </div>
         </section>
         
         <!-- Footer - Pusat -->
@@ -138,8 +152,8 @@ $members = $result->fetch_all(MYSQLI_ASSOC);
     </div>
     
     <!-- Modal Tambah -->
-    <div id="modal" class="fixed inset-0 bg-black/70 z-50 hidden items-center justify-center p-4">
-        <div class="bg-dark-card border border-dark-border rounded-xl w-full max-w-sm p-5 relative">
+    <div id="modal" class="fixed inset-0 bg-black/70 z-50 hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div id="modalContent" class="bg-dark-card border border-dark-border rounded-xl w-full max-w-sm p-5 relative transform scale-95 transition-transform duration-300">
             <!-- Close button -->
             <button id="closeModal" class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full hover:bg-dark-border transition-colors">
                 <svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
