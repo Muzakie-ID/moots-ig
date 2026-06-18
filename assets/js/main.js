@@ -20,6 +20,10 @@ function initApp() {
         addBtn.addEventListener('click', function() {
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+            document.body.style.top = '-' + window.scrollY + 'px';
             setTimeout(function() {
                 modal.classList.add('opacity-100');
                 modal.classList.remove('opacity-0');
@@ -56,10 +60,18 @@ function initApp() {
     });
     
     function closeModalFn() {
+        var scrollY = document.body.style.top;
         modal.classList.remove('opacity-100');
         modal.classList.add('opacity-0');
         modalContent.classList.remove('scale-100');
         modalContent.classList.add('scale-95');
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+        if (scrollY) {
+            window.scrollTo(0, parseInt(scrollY.replace('-', '')) || 0);
+        }
         setTimeout(function() {
             modal.classList.remove('flex');
             modal.classList.add('hidden');

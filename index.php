@@ -148,6 +148,7 @@ $members = $result->fetch_all(MYSQLI_ASSOC);
                     <span class="text-white text-sm font-medium">@forkomtrisvugm</span>
                 </a>
             </div>
+            <p class="text-center text-gray-500 text-xs mt-4">Dibuat oleh <span class="text-accent">Muzakie</span></p>
         </footer>
     </div>
     
