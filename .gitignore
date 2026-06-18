@@ -1,0 +1,12 @@
+# Ignore sensitive files
+.env
+.DS_Store
+
+# Ignore IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Ignore logs
+*.log

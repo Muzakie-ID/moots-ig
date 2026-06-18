@@ -1,0 +1,10 @@
+-- Buat database terlebih dahulu
+CREATE DATABASE IF NOT EXISTS mots_ig;
+USE mots_ig;
+
+-- Buat tabel members
+CREATE TABLE IF NOT EXISTS members (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

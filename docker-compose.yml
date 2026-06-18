@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: mots-ig-web
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - db_network
+    restart: unless-stopped
+
+networks:
+  db_network:
+    external: true
+    name: db_master_shared
