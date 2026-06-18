@@ -48,21 +48,32 @@ $members = $result->fetch_all(MYSQLI_ASSOC);
             <p class="text-gray-500 text-sm">Kunjungi profile IG member kami</p>
         </header>
         
-        <!-- Search -->
+        <!-- Search & Add -->
         <section class="mb-4">
-            <div class="relative">
-                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"/>
-                    <path d="m21 21-4.35-4.35"/>
-                </svg>
-                <input 
-                    type="text" 
-                    id="searchInput"
-                    placeholder="Cari username..." 
-                    autocomplete="off"
-                    class="w-full bg-dark-secondary border border-dark-border rounded-lg pl-10 pr-4 py-3 text-white text-sm
-                           placeholder-gray-500 outline-none focus:border-accent transition-colors"
+            <div class="flex gap-2">
+                <div class="relative flex-1">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input 
+                        type="text" 
+                        id="searchInput"
+                        placeholder="Cari username..." 
+                        autocomplete="off"
+                        class="w-full bg-dark-secondary border border-dark-border rounded-lg pl-10 pr-4 py-3 text-white text-sm
+                               placeholder-gray-500 outline-none focus:border-accent transition-colors"
+                    >
+                </div>
+                <button 
+                    id="addBtn"
+                    class="flex items-center justify-center w-12 h-12 bg-accent hover:bg-accent-hover rounded-lg transition-all duration-200 active:scale-95"
                 >
+                    <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                </button>
             </div>
         </section>
         
@@ -87,7 +98,7 @@ $members = $result->fetch_all(MYSQLI_ASSOC);
                         </a>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <div class="text-center py-12 text-gray-500 animate-fade-in">
+                    <div class="empty-state text-center py-12 text-gray-500">
                         <svg class="w-12 h-12 mx-auto mb-3 opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                             <circle cx="9" cy="7" r="4"/>
@@ -97,42 +108,6 @@ $members = $result->fetch_all(MYSQLI_ASSOC);
                         <p class="text-sm">Belum ada member</p>
                     </div>
                 <?php endif; ?>
-            </div>
-        </section>
-        
-        <!-- Form Tambah -->
-        <section>
-            <div class="bg-dark-card border border-dark-border rounded-xl p-4">
-                <h2 class="text-white font-semibold text-base mb-3 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="8.5" cy="7" r="4"/>
-                        <line x1="20" y1="8" x2="20" y2="14"/>
-                        <line x1="23" y1="11" x2="17" y2="11"/>
-                    </svg>
-                    Tambah Member
-                </h2>
-                <form id="addForm">
-                    <div class="flex gap-2">
-                        <input 
-                            type="text" 
-                            id="username" 
-                            name="username" 
-                            placeholder="Username Instagram" 
-                            autocomplete="off"
-                            required
-                            class="flex-1 bg-dark-secondary border border-dark-border rounded-lg px-4 py-3 text-white text-sm
-                                   placeholder-gray-500"
-                        >
-                        <button 
-                            type="submit" 
-                            id="submitBtn"
-                            class="btn-add"
-                        >
-                            Tambah
-                        </button>
-                    </div>
-                </form>
             </div>
         </section>
         
@@ -160,6 +135,49 @@ $members = $result->fetch_all(MYSQLI_ASSOC);
                 </a>
             </div>
         </footer>
+    </div>
+    
+    <!-- Modal Tambah -->
+    <div id="modal" class="fixed inset-0 bg-black/70 z-50 hidden items-center justify-center p-4">
+        <div class="bg-dark-card border border-dark-border rounded-xl w-full max-w-sm p-5 relative">
+            <!-- Close button -->
+            <button id="closeModal" class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full hover:bg-dark-border transition-colors">
+                <svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            
+            <h2 class="text-white font-semibold text-lg mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="8.5" cy="7" r="4"/>
+                    <line x1="20" y1="8" x2="20" y2="14"/>
+                    <line x1="23" y1="11" x2="17" y2="11"/>
+                </svg>
+                Tambah Member
+            </h2>
+            
+            <form id="addForm">
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    placeholder="Username Instagram" 
+                    autocomplete="off"
+                    required
+                    class="w-full bg-dark-secondary border border-dark-border rounded-lg px-4 py-3 text-white text-sm
+                           placeholder-gray-500 mb-4 outline-none focus:border-accent transition-colors"
+                >
+                <button 
+                    type="submit" 
+                    id="submitBtn"
+                    class="w-full btn-add py-3"
+                >
+                    Tambah
+                </button>
+            </form>
+        </div>
     </div>
     
     <!-- JS -->

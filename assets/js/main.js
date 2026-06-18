@@ -1,12 +1,47 @@
-// Handle form submission and search
+// Handle form submission, search and modal
 function initApp() {
+    var modal = document.getElementById('modal');
+    var addBtn = document.getElementById('addBtn');
+    var closeModal = document.getElementById('closeModal');
     var form = document.getElementById('addForm');
+    var usernameInput = document.getElementById('username');
+    var submitBtn = document.getElementById('submitBtn');
+    
+    // Modal controls
+    if (addBtn && modal) {
+        addBtn.addEventListener('click', function() {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            usernameInput.focus();
+        });
+    }
+    
+    if (closeModal && modal) {
+        closeModal.addEventListener('click', function() {
+            closeModalFn();
+        });
+    }
+    
+    // Close modal on backdrop click
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModalFn();
+            }
+        });
+    }
+    
+    function closeModalFn() {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+        usernameInput.value = '';
+    }
+    
+    // Form submission
     if (form) {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            var usernameInput = document.getElementById('username');
-            var submitBtn = document.getElementById('submitBtn');
             var username = usernameInput.value.trim();
             
             if (!username) {
@@ -14,11 +49,9 @@ function initApp() {
                 return;
             }
             
-            // Disable button saat submit
             submitBtn.disabled = true;
             submitBtn.textContent = 'Menambah...';
             
-            // Submit form via fetch
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'add.php', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -30,7 +63,7 @@ function initApp() {
                             var data = JSON.parse(xhr.responseText);
                             if (data.success) {
                                 showToast('Username berhasil ditambahkan!', 'success');
-                                usernameInput.value = '';
+                                closeModalFn();
                                 setTimeout(function() {
                                     location.reload();
                                 }, 1000);
@@ -74,13 +107,48 @@ function initApp() {
                 }
             });
             
-            // Show/hide empty state based on results
             var emptyState = document.querySelector('.empty-state');
             if (emptyState) {
                 emptyState.style.display = hasResults ? 'none' : 'block';
             }
         });
     }
+}
+
+function closeModalFn() {
+    var modal = document.getElementById('modal');
+    var usernameInput = document.getElementById('username');
+    var submitBtn = document.getElementById('submitBtn');
+    if (modal) {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+    }
+    if (usernameInput) usernameInput.value = '';
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Tambah';
+    }
+}
+
+function showToast(message, type) {
+    var oldToast = document.querySelector('.toast');
+    if (oldToast) oldToast.remove();
+    
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(function() {
+        toast.classList.add('show');
+    }, 10);
+    
+    setTimeout(function() {
+        toast.classList.remove('show');
+        setTimeout(function() {
+            toast.remove();
+        }, 400);
+    }, 3000);
 }
 
 // Run on DOM ready or immediately if already loaded
