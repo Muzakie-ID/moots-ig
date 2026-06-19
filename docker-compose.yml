@@ -11,6 +11,9 @@ services:
     networks:
       - db_network
     restart: unless-stopped
+    environment:
+      - PHP_UPLOAD_MAX_FILESIZE=20M
+      - PHP_POST_MAX_SIZE=25M
 
 networks:
   db_network:
