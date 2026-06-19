@@ -232,7 +232,8 @@ $result = $conn->query("SELECT id, username, foto, created_at FROM members ORDER
                     <?php if ($member['foto']): ?>
                     <img src="serve-file.php?file=<?= urlencode($member['foto']) ?>" 
                          alt="" 
-                         class="w-12 h-12 rounded-lg object-cover border border-dark-border">
+                         class="w-12 h-12 rounded-lg object-cover border border-dark-border cursor-pointer hover:opacity-80"
+                         onclick="showImage(this.src)">
                     <div>
                         <p class="text-white text-sm font-medium">@<?= htmlspecialchars($member['username']) ?></p>
                         <p class="text-green-400 text-xs">✓ <?= htmlspecialchars($member['foto']) ?></p>
@@ -252,9 +253,10 @@ $result = $conn->query("SELECT id, username, foto, created_at FROM members ORDER
                 </div>
                 <?php if ($member['foto']): ?>
                 <div class="flex items-center gap-2">
+                    <button onclick="showImage('serve-file.php?file=<?= urlencode($member['foto']) ?>')" class="text-accent text-xs hover:underline">Lihat</button>
                     <a href="serve-file.php?file=<?= urlencode($member['foto']) ?>" 
-                       class="text-accent text-xs hover:underline">Download</a>
-                    <form method="POST" onsubmit="return confirm('Hapus dokumen @<?= htmlspecialchars($member['username']) ?>?')">
+                       class="text-gray-400 text-xs hover:text-white">Download</a>
+                    <form method="POST" onsubmit="return confirm('Hapus dokumen @<?= htmlspecialchars($member['username']) ?>?')" class="inline">
                         <input type="hidden" name="delete_foto" value="1">
                         <input type="hidden" name="member_id" value="<?= $member['id'] ?>">
                         <input type="hidden" name="foto_name" value="<?= htmlspecialchars($member['foto']) ?>">
@@ -264,6 +266,12 @@ $result = $conn->query("SELECT id, username, foto, created_at FROM members ORDER
                 <?php endif; ?>
             </div>
             <?php endwhile; ?>
+        </div>
+        
+        <!-- Image Modal -->
+        <div id="imageModal" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4" onclick="closeImage()">
+            <img id="modalImage" src="" class="max-w-full max-h-full object-contain">
+            <button onclick="closeImage()" class="absolute top-4 right-4 text-white text-3xl">&times;</button>
         </div>
         
         <div class="mt-6 text-center">
@@ -287,6 +295,24 @@ $result = $conn->query("SELECT id, username, foto, created_at FROM members ORDER
                 }
             }
         }
+        
+        function showImage(src) {
+            var modal = document.getElementById('imageModal');
+            var img = document.getElementById('modalImage');
+            img.src = src;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        
+        function closeImage() {
+            var modal = document.getElementById('imageModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeImage();
+        });
     </script>
 </body>
 </html>
