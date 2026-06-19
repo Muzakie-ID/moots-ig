@@ -229,8 +229,8 @@ $result = $conn->query("SELECT id, username, foto, created_at FROM members ORDER
             <?php while ($member = $result->fetch_assoc()): ?>
             <div class="flex items-center justify-between bg-dark-secondary border border-dark-border rounded-lg p-3">
                 <div class="flex items-center gap-3">
-                    <?php if ($member['foto'] && file_exists('upload-foto/' . $member['foto'])): ?>
-                    <img src="upload-foto/<?= htmlspecialchars($member['foto']) ?>" 
+                    <?php if ($member['foto']): ?>
+                    <img src="serve-file.php?file=<?= urlencode($member['foto']) ?>" 
                          alt="" 
                          class="w-12 h-12 rounded-lg object-cover border border-dark-border">
                     <div>
