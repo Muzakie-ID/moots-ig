@@ -147,8 +147,8 @@ if (isset($_GET['logout'])) {
             
             <!-- Current Document Preview -->
             <div class="text-center mb-4">
-                <?php if ($currentFoto && file_exists('upload-foto/' . $currentFoto)): ?>
-                <img src="upload-foto/<?= htmlspecialchars($currentFoto) ?>" 
+                <?php if ($currentFoto && file_exists(__DIR__ . '/upload-foto/' . $currentFoto)): ?>
+                <img src="serve-file.php?file=<?= urlencode($currentFoto) ?>" 
                      alt="Dokumen" 
                      class="max-w-full h-auto max-h-48 rounded-lg mx-auto mb-3 border border-dark-border">
                 <p class="text-green-400 text-xs">✓ Dokumen sudah terkirim</p>
