@@ -29,12 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['foto'])) {
     
     if ($file['error'] === UPLOAD_ERR_OK) {
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-        $maxSize = 5 * 1024 * 1024; // 5MB
+        $maxSize = 20 * 1024 * 1024; // 20MB
         
         if (!in_array($file['type'], $allowedTypes)) {
             $uploadError = 'Format file tidak didukung. Gunakan JPG, PNG, GIF, atau WebP.';
         } elseif ($file['size'] > $maxSize) {
-            $uploadError = 'Ukuran file maksimal 5MB.';
+            $uploadError = 'Ukuran file maksimal 20MB.';
         } else {
             // Folder upload absolut
             $uploadDir = __DIR__ . '/upload-foto/';
@@ -176,7 +176,7 @@ if (isset($_GET['logout'])) {
                         <line x1="12" y1="3" x2="12" y2="15"/>
                     </svg>
                     <span class="text-gray-400 text-sm">Pilih dokumen (JPG, PNG, GIF, WebP)</span>
-                    <span class="text-gray-600 text-xs block mt-1">Maks 5MB</span>
+                    <span class="text-gray-600 text-xs block mt-1">Maks 20MB</span>
                 </label>
                 <p class="text-gray-600 text-xs text-center">Nama file akan otomatis menjadi: <span class="text-accent"><?= htmlspecialchars($username) ?>.ext</span></p>
             </form>
