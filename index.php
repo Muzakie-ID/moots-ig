@@ -46,6 +46,11 @@ $members = $result->fetch_all(MYSQLI_ASSOC);
         <header class="text-center mb-6 animate-fade-in">
             <h1 class="text-2xl font-bold text-white mb-1">Mots IG</h1>
             <p class="text-gray-500 text-sm">Kunjungi profile IG member kami</p>
+            <div class="mt-2 flex justify-center gap-2">
+                <a href="login.php" class="text-xs text-gray-500 hover:text-accent transition-colors">Login</a>
+                <span class="text-gray-600">|</span>
+                <a href="upload.php" class="text-xs text-gray-500 hover:text-accent transition-colors">Upload Foto</a>
+            </div>
         </header>
         
         <!-- Search & Add -->

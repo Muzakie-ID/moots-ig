@@ -1,0 +1,3 @@
+# Protect upload-foto folder - deny all direct access
+Order Deny,Allow
+Deny from all
