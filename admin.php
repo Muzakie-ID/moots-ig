@@ -254,7 +254,7 @@ $result = $conn->query("SELECT id, username, foto, created_at FROM members ORDER
                 <?php if ($member['foto']): ?>
                 <div class="flex items-center gap-2">
                     <button onclick="showImage('serve-file.php?file=<?= urlencode($member['foto']) ?>')" class="text-accent text-xs hover:underline">Lihat</button>
-                    <a href="serve-file.php?file=<?= urlencode($member['foto']) ?>" 
+                    <a href="serve-file.php?file=<?= urlencode($member['foto']) ?>&download=1" 
                        class="text-gray-400 text-xs hover:text-white">Download</a>
                     <form method="POST" onsubmit="return confirm('Hapus dokumen @<?= htmlspecialchars($member['username']) ?>?')" class="inline">
                         <input type="hidden" name="delete_foto" value="1">

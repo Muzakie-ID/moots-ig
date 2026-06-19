@@ -37,6 +37,9 @@ if ($isMember && !$isAdmin) {
     }
 }
 
+// Check if download is requested
+$download = isset($_GET['download']) && $_GET['download'] === '1';
+
 // Get file info
 $finfo = finfo_open(FILEINFO_MIME_TYPE);
 $mimeType = finfo_file($finfo, $filepath);
@@ -44,7 +47,11 @@ finfo_close($finfo);
 
 // Send headers
 header('Content-Type: ' . $mimeType);
-header('Content-Disposition: inline; filename="' . $filename . '"');
+if ($download || $isAdmin) {
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+} else {
+    header('Content-Disposition: inline; filename="' . $filename . '"');
+}
 header('Content-Length: ' . filesize($filepath));
 
 // Serve file
