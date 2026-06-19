@@ -230,10 +230,18 @@ $result = $conn->query("SELECT id, username, foto, created_at FROM members ORDER
             <div class="flex items-center justify-between bg-dark-secondary border border-dark-border rounded-lg p-3">
                 <div class="flex items-center gap-3">
                     <?php if ($member['foto']): ?>
-                    <img src="serve-file.php?file=<?= urlencode($member['foto']) ?>" 
-                         alt="" 
-                         class="w-12 h-12 rounded-lg object-cover border border-dark-border cursor-pointer hover:opacity-80"
-                         onclick="showImage(this.src)">
+                    <div class="relative">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect fill='%2330363d' width='48' height='48'/%3E%3C/svg%3E" 
+                             data-src="serve-file.php?file=<?= urlencode($member['foto']) ?>" 
+                             alt="" 
+                             class="w-12 h-12 rounded-lg object-cover border border-dark-border cursor-pointer hover:opacity-80 lazy-img"
+                             onclick="showImage(this.dataset.src)">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-gray-500 animate-spin hidden loader" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="32"/>
+                            </svg>
+                        </div>
+                    </div>
                     <div>
                         <p class="text-white text-sm font-medium">@<?= htmlspecialchars($member['username']) ?></p>
                         <p class="text-green-400 text-xs">✓ <?= htmlspecialchars($member['foto']) ?></p>
@@ -312,6 +320,36 @@ $result = $conn->query("SELECT id, username, foto, created_at FROM members ORDER
         
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeImage();
+        });
+        
+        // Lazy loading images
+        document.addEventListener('DOMContentLoaded', function() {
+            var lazyImages = document.querySelectorAll('.lazy-img');
+            
+            var observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        var img = entry.target;
+                        var loader = img.parentElement.querySelector('.loader');
+                        
+                        // Show loader
+                        if (loader) loader.classList.remove('hidden');
+                        
+                        // Load actual image
+                        img.src = img.dataset.src;
+                        img.onload = function() {
+                            if (loader) loader.classList.add('hidden');
+                            img.classList.add('loaded');
+                        };
+                        
+                        observer.unobserve(img);
+                    }
+                });
+            }, { rootMargin: '50px' });
+            
+            lazyImages.forEach(function(img) {
+                observer.observe(img);
+            });
         });
     </script>
 </body>
