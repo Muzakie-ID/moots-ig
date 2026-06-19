@@ -36,15 +36,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['foto'])) {
         } elseif ($file['size'] > $maxSize) {
             $uploadError = 'Ukuran file maksimal 5MB.';
         } else {
+            // Folder upload absolut
+            $uploadDir = __DIR__ . '/upload-foto/';
+            
+            // Buat folder otomatis jika belum ada
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            
             // Get file extension
             $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
             // Auto name = username
             $newName = $username . '.' . $ext;
-            $uploadPath = 'upload-foto/' . $newName;
+            $uploadPath = $uploadDir . $newName;
             
             // Delete old photo if exists
-            if ($currentFoto && file_exists('upload-foto/' . $currentFoto)) {
-                unlink('upload-foto/' . $currentFoto);
+            if ($currentFoto && file_exists($uploadDir . $currentFoto)) {
+                unlink($uploadDir . $currentFoto);
             }
             
             if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
