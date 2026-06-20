@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_foto'])) {
 }
 
 // Get all members with upload status
-$result = $conn->query("SELECT id, username, foto, created_at FROM members ORDER BY created_at DESC");
+$result = $conn->query("SELECT id, username, foto, foto_uploaded_at, created_at FROM members ORDER BY created_at DESC");
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -245,6 +245,9 @@ $result = $conn->query("SELECT id, username, foto, created_at FROM members ORDER
                     <div>
                         <p class="text-white text-sm font-medium">@<?= htmlspecialchars($member['username']) ?></p>
                         <p class="text-green-400 text-xs">✓ <?= htmlspecialchars($member['foto']) ?></p>
+                        <?php if ($member['foto_uploaded_at']): ?>
+                        <p class="text-gray-500 text-xs"><?= date('d M Y, H:i', strtotime($member['foto_uploaded_at'])) ?></p>
+                        <?php endif; ?>
                     </div>
                     <?php else: ?>
                     <div class="w-12 h-12 rounded-lg bg-dark-border flex items-center justify-center">

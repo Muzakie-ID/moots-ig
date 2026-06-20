@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['foto'])) {
             
             if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
                 // Update database
-                $stmt = $conn->prepare("UPDATE members SET foto = ? WHERE username = ?");
+                $stmt = $conn->prepare("UPDATE members SET foto = ?, foto_uploaded_at = NOW() WHERE username = ?");
                 $stmt->bind_param("ss", $newName, $username);
                 $stmt->execute();
                 $stmt->close();

@@ -10,5 +10,6 @@ CREATE TABLE IF NOT EXISTS members (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tambah kolom foto jika tabel sudah ada (untuk update)
+-- Tambah kolom foto dan foto_uploaded_at jika tabel sudah ada (untuk update)
 -- ALTER TABLE members ADD COLUMN foto VARCHAR(255) DEFAULT NULL AFTER username;
+-- ALTER TABLE members ADD COLUMN foto_uploaded_at TIMESTAMP NULL AFTER foto;
