@@ -143,14 +143,14 @@ function initApp() {
     
     // ---- Real-time Search with animation ----
     if (searchInput) {
-        var searchIcon = searchInput.parentElement.querySelector('svg');
+        var searchIcon = searchInput.parentElement.querySelector('i.fa-magnifying-glass');
         
         searchInput.addEventListener('focus', function() {
             if (searchIcon) searchIcon.style.color = '#9381ff';
         });
         
         searchInput.addEventListener('blur', function() {
-            if (searchIcon) searchIcon.style.color = '';
+            if (searchIcon) searchIcon.style.color = 'white';
         });
         
         searchInput.addEventListener('input', function() {

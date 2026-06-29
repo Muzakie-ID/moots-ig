@@ -26,7 +26,7 @@ $members = $result->fetch_all(MYSQLI_ASSOC);
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <script>
         tailwind.config = {
@@ -78,10 +78,7 @@ $members = $result->fetch_all(MYSQLI_ASSOC);
         <!-- Search & Add -->
         <section class="mb-5 animate-fade-in-up" style="animation-delay: 0.1s;">
             <div class="relative">
-                <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 transition-colors duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"/>
-                    <path d="m21 21-4.35-4.35"/>
-                </svg>
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-white text-sm transition-colors duration-300"></i>
                 <input 
                     type="text" 
                     id="searchInput"
