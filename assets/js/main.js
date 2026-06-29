@@ -1,4 +1,7 @@
-// Handle form submission, search, modal, and pull to refresh
+// ============================================
+// MOTS IG — Enhanced Animations & Interactions
+// ============================================
+
 function initApp() {
     var modal = document.getElementById('modal');
     var modalContent = document.getElementById('modalContent');
@@ -12,10 +15,13 @@ function initApp() {
     var noResults = document.getElementById('noResults');
     var searchResultText = document.getElementById('searchResultText');
     
-    // Update member count on load
+    // Initialize
     updateMemberCount();
+    initScrollAnimations();
+    initParallaxOrbs();
+    initRippleButtons();
     
-    // Modal controls with animation
+    // ---- Modal Controls ----
     if (addBtn && modal && modalContent) {
         addBtn.addEventListener('click', function() {
             modal.classList.remove('hidden');
@@ -49,7 +55,7 @@ function initApp() {
         });
     }
     
-    // Keyboard support: ESC to close, Enter to submit
+    // Keyboard: ESC to close, Enter to submit
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
             closeModalFn();
@@ -75,7 +81,7 @@ function initApp() {
         setTimeout(function() {
             modal.classList.remove('flex');
             modal.classList.add('hidden');
-        }, 300);
+        }, 400);
         usernameInput.value = '';
         if (submitBtn) {
             submitBtn.disabled = false;
@@ -83,7 +89,7 @@ function initApp() {
         }
     }
     
-    // Form submission
+    // ---- Form Submission ----
     if (form) {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -135,8 +141,18 @@ function initApp() {
         });
     }
     
-    // Real-time search
+    // ---- Real-time Search with animation ----
     if (searchInput) {
+        var searchIcon = searchInput.parentElement.querySelector('svg');
+        
+        searchInput.addEventListener('focus', function() {
+            if (searchIcon) searchIcon.style.color = '#9381ff';
+        });
+        
+        searchInput.addEventListener('blur', function() {
+            if (searchIcon) searchIcon.style.color = '';
+        });
+        
         searchInput.addEventListener('input', function() {
             var query = this.value.toLowerCase().trim();
             var items = document.querySelectorAll('.member-item');
@@ -154,16 +170,18 @@ function initApp() {
                 }
             });
             
-            // Show/hide empty state based on results
+            // Show/hide empty state
             var emptyState = document.querySelector('.empty-state');
             if (emptyState) {
                 emptyState.style.display = hasResults ? 'none' : 'block';
             }
             
-            // Show "no results" message
+            // Show "no results"
             if (noResults && searchResultText) {
                 if (query.length > 0 && !hasResults) {
                     noResults.classList.remove('hidden');
+                    var searchQuery = document.getElementById('searchQuery');
+                    if (searchQuery) searchQuery.textContent = query;
                     searchResultText.classList.add('hidden');
                 } else {
                     noResults.classList.add('hidden');
@@ -176,7 +194,6 @@ function initApp() {
                 }
             }
             
-            // Update member count text
             updateMemberCount();
         });
     }
@@ -202,10 +219,9 @@ function initApp() {
         }
     }
     
-    // Pull to refresh on mobile
+    // ---- Pull to Refresh (mobile) ----
     var touchStartY = 0;
     var touchEndY = 0;
-    var pullIndicator = document.getElementById('pullIndicator');
     
     document.addEventListener('touchstart', function(e) {
         if (window.scrollY === 0) {
@@ -218,11 +234,10 @@ function initApp() {
             touchEndY = e.touches[0].clientY;
             var pullDistance = touchEndY - touchStartY;
             
-            if (pullDistance > 80 && !pullIndicator) {
-                // Create pull indicator
+            if (pullDistance > 80 && !document.getElementById('pullIndicator')) {
                 var indicator = document.createElement('div');
                 indicator.id = 'pullIndicator';
-                indicator.className = 'fixed top-0 left-0 right-0 z-40 bg-accent text-white text-center py-2 text-sm font-medium';
+                indicator.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:40;text-align:center;padding:0.625rem;font-size:0.75rem;font-weight:600;color:white;background:linear-gradient(90deg,#9381ff,#b8b8ff);';
                 indicator.textContent = 'Lepaskan untuk refresh...';
                 document.body.appendChild(indicator);
             }
@@ -234,7 +249,6 @@ function initApp() {
             var pullDistance = touchEndY - touchStartY;
             
             if (pullDistance > 80) {
-                // Refresh page
                 location.reload();
             }
             
@@ -242,37 +256,95 @@ function initApp() {
             touchEndY = 0;
             
             var indicator = document.getElementById('pullIndicator');
-            if (indicator) {
-                indicator.remove();
-            }
+            if (indicator) indicator.remove();
         }
     }, { passive: true });
 }
 
-function closeModalFn() {
-    var modal = document.getElementById('modal');
-    var modalContent = document.getElementById('modalContent');
-    var usernameInput = document.getElementById('username');
-    var submitBtn = document.getElementById('submitBtn');
+// ============================================
+// Scroll-triggered animations (IntersectionObserver)
+// ============================================
+function initScrollAnimations() {
+    var revealElements = document.querySelectorAll('.reveal');
+    if (revealElements.length === 0) return;
     
-    if (modal && modalContent) {
-        modal.classList.remove('opacity-100');
-        modal.classList.add('opacity-0');
-        modalContent.classList.remove('scale-100');
-        modalContent.classList.add('scale-95');
-        setTimeout(function() {
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-        }, 300);
-    }
-    if (usernameInput) usernameInput.value = '';
-    if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Tambah';
-    }
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px'
+    });
+    
+    revealElements.forEach(function(el) {
+        observer.observe(el);
+    });
 }
 
+// ============================================
+// Parallax effect on background orbs (mouse)
+// ============================================
+function initParallaxOrbs() {
+    var orbs = document.querySelectorAll('.bg-orb');
+    if (orbs.length === 0 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    
+    var rafId = null;
+    var mouseX = 0;
+    var mouseY = 0;
+    
+    document.addEventListener('mousemove', function(e) {
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+        
+        if (!rafId) {
+            rafId = requestAnimationFrame(function() {
+                orbs.forEach(function(orb, i) {
+                    var depth = (i + 1) * 8;
+                    var x = mouseX * depth;
+                    var y = mouseY * depth;
+                    orb.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+                });
+                rafId = null;
+            });
+        }
+    });
+}
+
+// ============================================
+// Ripple effect on gradient buttons
+// ============================================
+function initRippleButtons() {
+    var buttons = document.querySelectorAll('.btn-gradient, .btn-add');
+    
+    buttons.forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            var rect = btn.getBoundingClientRect();
+            var size = Math.max(rect.width, rect.height);
+            var x = e.clientX - rect.left - size / 2;
+            var y = e.clientY - rect.top - size / 2;
+            
+            var ripple = document.createElement('span');
+            ripple.className = 'ripple-effect';
+            ripple.style.cssText = 'position:absolute;border-radius:50%;background:rgba(255,255,255,0.3);pointer-events:none;width:' + size + 'px;height:' + size + 'px;left:' + x + 'px;top:' + y + 'px;animation:ripple 0.6s linear forwards;';
+            
+            btn.appendChild(ripple);
+            
+            setTimeout(function() {
+                ripple.remove();
+            }, 600);
+        });
+    });
+}
+
+// ============================================
+// Toast Notification
+// ============================================
 function showToast(message, type) {
+    // Remove existing toast
     var oldToast = document.querySelector('.toast');
     if (oldToast) oldToast.remove();
     
@@ -281,10 +353,12 @@ function showToast(message, type) {
     toast.textContent = message;
     document.body.appendChild(toast);
     
+    // Trigger entrance animation
     setTimeout(function() {
         toast.classList.add('show');
     }, 10);
     
+    // Auto-dismiss after 3s
     setTimeout(function() {
         toast.classList.remove('show');
         setTimeout(function() {
@@ -293,33 +367,11 @@ function showToast(message, type) {
     }, 3000);
 }
 
-// Run on DOM ready or immediately if already loaded
+// ============================================
+// Run on DOM ready
+// ============================================
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initApp);
 } else {
     initApp();
-}
-
-function showToast(message, type) {
-    // Hapus toast lama kalau ada
-    var oldToast = document.querySelector('.toast');
-    if (oldToast) oldToast.remove();
-    
-    var toast = document.createElement('div');
-    toast.className = 'toast ' + type;
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    
-    // Trigger animation
-    setTimeout(function() {
-        toast.classList.add('show');
-    }, 10);
-    
-    // Hide after 3s
-    setTimeout(function() {
-        toast.classList.remove('show');
-        setTimeout(function() {
-            toast.remove();
-        }, 400);
-    }, 3000);
 }
